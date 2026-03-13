@@ -178,20 +178,11 @@ const App = {
 
     // --- GESTIÓN DE CATEGORÍAS ---
     loadCategories: () => {
-        try {
-            const saved = localStorage.getItem('alta_pinta_categories');
-            if (saved) {
-                App.categories = JSON.parse(saved);
-            }
-        } catch (e) {
-            console.error("Local Storage corrupto, restaurando categorías default.", e);
-            App.categories = ['REMERAS', 'PANTALONES', 'BUZOS', 'ACCESORIOS'];
-            localStorage.removeItem('alta_pinta_categories');
-        }
+        // Obsoleto, se cargan juntas en loadProducts
     },
 
     saveCategories: () => {
-        localStorage.setItem('alta_pinta_categories', JSON.stringify(App.categories));
+        App.saveDataToCloud();
     },
 
     addCategory: () => {
@@ -452,32 +443,41 @@ const App = {
     },
 
     saveProducts: () => {
-        localStorage.setItem('alta_pinta_products', JSON.stringify(App.products));
+        App.saveDataToCloud();
+    },
+
+    saveDataToCloud: async () => {
+        try {
+            await fetch('https://jsonblob.com/api/jsonBlob/019ce978-4089-779e-87f3-ccc54f02febc', {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({
+                    categories: App.categories,
+                    products: App.products
+                })
+            });
+        } catch (e) {
+            console.error("Error guardando en la nube", e);
+        }
     },
 
     loadProducts: async () => {
         const grid = document.getElementById('product-grid');
         if (!grid) return;
         
-        App.loadCategories(); // Asegurar que categorías estén al día
-
         try {
-            // 1. Intentar cargar desde LocalStorage primero
-            const saved = localStorage.getItem('alta_pinta_products');
-            
-            if (saved && App.products.length === 0) {
-                try {
-                    App.products = JSON.parse(saved);
-                } catch(e) {
-                    console.error("Error leyendo inventario del Storage, recargando base segura.", e);
-                    localStorage.removeItem('alta_pinta_products');
-                    const response = await fetch('data/products.json');
-                    App.products = await response.json();
-                }
-            } else if (App.products.length === 0) {
-                // 2. Si no hay nada en LocalStorage, cargar del JSON original
-                const response = await fetch('data/products.json');
-                App.products = await response.json();
+            const response = await fetch('https://jsonblob.com/api/jsonBlob/019ce978-4089-779e-87f3-ccc54f02febc');
+            if (response.ok) {
+                const data = await response.json();
+                App.categories = data.categories && data.categories.length > 0 ? data.categories : ['REMERAS', 'PANTALONES', 'BUZOS', 'ACCESORIOS'];
+                App.products = data.products || [];
+            } else {
+                // Fallback
+                const fallbackFetch = await fetch('data/products.json');
+                App.products = await fallbackFetch.json();
             }
 
             // Añadimos clases de scroll horizontal al contenedor para móvil
