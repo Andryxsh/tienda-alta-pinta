@@ -1,4 +1,18 @@
 import { UI } from './ui.js';
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+
+const firebaseConfig = {
+    apiKey: "AIzaSyDJ6MDs2F-0sB2F_4zsLpYXpx9LRE1z0Sg",
+    authDomain: "alta-pinta-68ded.firebaseapp.com",
+    projectId: "alta-pinta-68ded",
+    storageBucket: "alta-pinta-68ded.firebasestorage.app",
+    messagingSenderId: "690591704296",
+    appId: "1:690591704296:web:cda27586456e2f42dd955d"
+};
+
+const firebaseApp = initializeApp(firebaseConfig);
+const db = getFirestore(firebaseApp);
 
 const App = {
     products: [],
@@ -14,7 +28,7 @@ const App = {
     init: () => {
         App.loadCategories();
         console.log("Tienda Alta Pinta Inicializada");
-        
+
         // 1. Mostrar Splash Screen Inmediatamente
         document.body.insertAdjacentHTML('afterbegin', UI.renderSplashScreen());
         document.body.style.overflow = 'hidden';
@@ -33,7 +47,7 @@ const App = {
             const splash = document.getElementById('splash-screen');
             if (splash) {
                 splash.classList.add('opacity-0', 'scale-110');
-                
+
                 // 5. Renderizar tienda una vez que se desvanece el splash
                 setTimeout(() => {
                     splash.remove();
@@ -82,7 +96,7 @@ const App = {
         const menu = document.getElementById('side-menu');
         const backdrop = document.getElementById('menu-backdrop');
         const content = document.getElementById('menu-content');
-        
+
         if (!menu || !backdrop || !content) return;
         const isOpen = content.classList.contains('translate-x-0');
 
@@ -123,7 +137,7 @@ const App = {
     handleAdminClick: () => {
         App.adminClickCount++;
         clearTimeout(App.adminClickTimeout);
-        
+
         if (App.adminClickCount >= 5) {
             App.adminClickCount = 0;
             const main = document.querySelector('main');
@@ -226,7 +240,7 @@ const App = {
         if (!p) return;
 
         App.editingProductId = id;
-        
+
         // Llenar formulario
         document.getElementById('new-p-name').value = p.name;
         document.getElementById('new-p-price').value = p.price;
@@ -237,13 +251,13 @@ const App = {
         checkboxes.forEach(cb => {
             cb.checked = p.sizes && p.sizes.includes(cb.value);
         });
-        
+
         // Cargar imagen actual en el preview
         App.tempImageData = p.img;
         const preview = document.getElementById('image-preview');
         const previewContainer = document.getElementById('image-preview-container');
         const status = document.getElementById('upload-status');
-        
+
         if (preview && previewContainer) {
             preview.src = p.img;
             previewContainer.classList.remove('hidden');
@@ -265,7 +279,7 @@ const App = {
     adminCancelEdit: () => {
         App.editingProductId = null;
         App.tempImageData = null;
-        
+
         // Limpiar campos
         document.getElementById('new-p-name').value = "";
         document.getElementById('new-p-price').value = "";
@@ -274,7 +288,7 @@ const App = {
         // Desmarcar talles
         const checkboxes = document.querySelectorAll('.admin-size-check');
         checkboxes.forEach(cb => cb.checked = false);
-        
+
         // Resetear UI
         App.clearImageUpload();
         document.getElementById('admin-form-title').innerText = "Agregar Nuevo Producto";
@@ -345,7 +359,7 @@ const App = {
         const status = document.getElementById('upload-status');
         const preview = document.getElementById('image-preview');
         const previewContainer = document.getElementById('image-preview-container');
-        
+
         status.innerText = "Procesando...";
 
         const reader = new FileReader();
@@ -355,34 +369,34 @@ const App = {
                 // Configurar el Canvas para convertir a WebP
                 const canvas = document.createElement('canvas');
                 const ctx = canvas.getContext('2d');
-                
+
                 // Redimensionar ligeramente si es muy grande para ahorrar Storage
                 let width = img.width;
                 let height = img.height;
                 const MAX_WIDTH = 800;
-                
+
                 if (width > MAX_WIDTH) {
                     height *= MAX_WIDTH / width;
                     width = MAX_WIDTH;
                 }
-                
+
                 canvas.width = width;
                 canvas.height = height;
                 ctx.drawImage(img, 0, 0, width, height);
-                
+
                 // Convertir a WebP con calidad 0.8
                 const webpData = canvas.toDataURL('image/webp', 0.8);
                 App.tempImageData = webpData;
-                
+
                 // Calcular tamaño aproximado para mostrar al usuario
-                const sizeInKb = Math.round((webpData.length * 3/4) / 1024);
-                
+                const sizeInKb = Math.round((webpData.length * 3 / 4) / 1024);
+
                 // Mostrar preview
                 preview.src = webpData;
                 previewContainer.classList.remove('hidden');
                 const meta = document.getElementById('image-meta');
                 if (meta) meta.innerText = `WEBP • ${sizeInKb}KB`;
-                
+
                 status.innerText = "✓ Imagen Lista";
                 status.classList.remove('text-white/40');
                 status.classList.add('text-alta-neon');
@@ -397,7 +411,7 @@ const App = {
         const status = document.getElementById('upload-status');
         const previewContainer = document.getElementById('image-preview-container');
         const fileInput = document.getElementById('new-p-file');
-        
+
         if (fileInput) fileInput.value = "";
         if (previewContainer) previewContainer.classList.add('hidden');
 
@@ -416,7 +430,7 @@ const App = {
         if (!p) return;
 
         App.pendingDeleteId = id;
-        
+
         // Inyectar el modal al final del body
         document.body.insertAdjacentHTML('beforeend', UI.renderDeleteConfirmation(p));
     },
@@ -426,7 +440,7 @@ const App = {
             App.products = App.products.filter(p => p.id !== App.pendingDeleteId);
             App.saveProducts();
             App.pendingDeleteId = null;
-            
+
             // Cerrar modal y refrescar dashboard
             App.closeAdminModal();
             App.showAdminDashboard();
@@ -448,36 +462,33 @@ const App = {
 
     saveDataToCloud: async () => {
         try {
-            await fetch('https://jsonblob.com/api/jsonBlob/019ce978-4089-779e-87f3-ccc54f02febc', {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json'
-                },
-                body: JSON.stringify({
-                    categories: App.categories,
-                    products: App.products
-                })
+            await setDoc(doc(db, "store", "data"), {
+                categories: App.categories,
+                products: App.products
             });
+            console.log("Datos respaldados en Firebase correctamente!");
         } catch (e) {
-            console.error("Error guardando en la nube", e);
+            console.error("Error guardando en la nube de Firebase", e);
         }
     },
 
     loadProducts: async () => {
         const grid = document.getElementById('product-grid');
         if (!grid) return;
-        
+
         try {
-            const response = await fetch('https://jsonblob.com/api/jsonBlob/019ce978-4089-779e-87f3-ccc54f02febc');
-            if (response.ok) {
-                const data = await response.json();
+            const dataDoc = await getDoc(doc(db, "store", "data"));
+            if (dataDoc.exists()) {
+                const data = dataDoc.data();
                 App.categories = data.categories && data.categories.length > 0 ? data.categories : ['REMERAS', 'PANTALONES', 'BUZOS', 'ACCESORIOS'];
                 App.products = data.products || [];
             } else {
-                // Fallback
+                // Fallback a nuestro JSON si la BD es nueva y está vacía
                 const fallbackFetch = await fetch('data/products.json');
                 App.products = await fallbackFetch.json();
+                App.categories = ['REMERAS', 'PANTALONES', 'BUZOS', 'ACCESORIOS'];
+                // La llenamos por primera vez
+                await App.saveDataToCloud();
             }
 
             // Añadimos clases de scroll horizontal al contenedor para móvil
@@ -525,7 +536,7 @@ const App = {
 
     scrollToProductsFromMenu: () => {
         const catalog = document.getElementById('catalog-section');
-        
+
         // Si no estamos en Home, vamos a Home primero
         if (!catalog) {
             App.showHome();
@@ -538,26 +549,26 @@ const App = {
             App.scrollToProducts();
             App.updateActiveMenu('menu-featured');
         }
-        
+
         App.toggleMenu();
     },
 
     contactByWhatsApp: (p = null, size = "") => {
-        const phoneNumber = "63537918"; 
+        const phoneNumber = "63537918";
         let message = "";
-        
+
         if (p) {
             message = `Hola Alta Pinta! Quisiera realizar un pedido:\n\n` +
-                      `------------------------------------\n` +
-                      `PRODUCTO: ${p.name}\n` +
-                      `TALLE: ${size}\n` +
-                      `PRECIO: Bs. ${p.price.toLocaleString()}\n` +
-                      `------------------------------------\n\n` +
-                      `¿Tienen stock disponible? ¡Gracias!`;
+                `------------------------------------\n` +
+                `PRODUCTO: ${p.name}\n` +
+                `TALLE: ${size}\n` +
+                `PRECIO: Bs. ${p.price.toLocaleString()}\n` +
+                `------------------------------------\n\n` +
+                `¿Tienen stock disponible? ¡Gracias!`;
         } else {
             message = `Hola Alta Pinta! Quisiera ver el catálogo completo.`;
         }
-        
+
         window.open(`https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`, '_blank');
     },
 
