@@ -1,0 +1,99 @@
+/* 
+   Alta Pinta - Responsive Enhancements 
+   Targeting Tablet, PC and Wide Screens
+*/
+
+/* Container & Layout */
+@media (min-width: 1024px) {
+
+    /* Main container max-width to prevent content from stretching too much on PC */
+    main {
+        max-width: 1600px;
+        margin: 0 auto;
+        position: relative;
+    }
+
+    /* Standard section horizontal padding improvement */
+    section {
+        padding-left: 5% !important;
+        padding-right: 5% !important;
+    }
+
+    /* Fixed Headers adjustment for centered main */
+    header.fixed {
+        max-width: 1600px;
+        left: 50% !important;
+        transform: translateX(-50%);
+        padding-left: 5% !important;
+        padding-right: 5% !important;
+    }
+
+    /* Side menu drawer refinement for desktop */
+    #menu-content {
+        max-width: 450px !important;
+    }
+
+    /* Product Grid Adjustments */
+    #product-grid {
+        grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+        gap: 3rem !important;
+    }
+
+    /* Marquee font size bump for PC */
+    .marquee-strip span {
+        font-size: 5rem !important;
+    }
+}
+
+@media (min-width: 1280px) {
+
+    /* Product Grid becomes 5 columns for Ultra Wide */
+    #product-grid {
+        grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
+    }
+
+    /* Lifestyle banner sizing */
+    .aspect-\[21\/9\] {
+        aspect-ratio: 21/7 !important;
+    }
+}
+
+/* Hero Section PC refinement */
+@media (min-width: 1024px) {
+    section.relative.min-h-\[80vh\] {
+        min-height: 90vh !important;
+        justify-content: center !important;
+        align-items: flex-start !important;
+        padding-left: 10% !important;
+    }
+
+    section.relative.min-h-\[80vh\] h1 {
+        font-size: 8rem !important;
+    }
+
+    section.relative.min-h-\[80vh\] p {
+        max-width: 450px !important;
+        font-size: 1.1rem !important;
+    }
+}
+
+/* Gallery refinement */
+@media (min-width: 1024px) {
+    .grid-cols-1.md\:grid-cols-2.lg\:grid-cols-3 {
+        grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+    }
+}
+
+/* Admin Panel PC refinement */
+@media (min-width: 1024px) {
+    #admin-form-section {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        display: grid;
+        gap: 2rem;
+        align-items: start;
+    }
+
+    #admin-form-section>button {
+        grid-column: span 2;
+    }
+}
