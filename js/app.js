@@ -489,11 +489,9 @@ const App = {
                     return p;
                 });
             } else {
-                // Fallback a nuestro JSON si la BD es nueva y está vacía
-                const fallbackFetch = await fetch('data/products.json');
-                App.products = await fallbackFetch.json();
+                console.log("Base de datos vacía. Iniciando configuración por defecto.");
+                App.products = [];
                 App.categories = ['REMERAS', 'PANTALONES', 'BUZOS', 'ACCESORIOS'];
-                // La llenamos por primera vez
                 await App.saveDataToCloud();
             }
 
