@@ -9,7 +9,7 @@ export const UI = {
                 <div class="relative flex flex-col items-center">
                     <!-- PNG Logo Animation (CINEMATIC) -->
                     <div class="mb-14 animate-pulse">
-                        <img src="IMG/logo.png" alt="Alta Pinta Logo" class="h-[70vh] md:h-[85vh] w-auto object-contain">
+                        <img src="assets/images/logo.png" alt="Alta Pinta Logo" class="h-[70vh] md:h-[85vh] w-auto object-contain">
                     </div>
                     
                     <!-- Loading Bar Container -->
@@ -79,7 +79,7 @@ export const UI = {
             <!-- Lifestyle Banner Section (NEW - Wide Aspect) -->
             <section class="w-full overflow-hidden bg-black py-4">
                 <div class="relative w-full aspect-[21/9] md:aspect-[32/9] group">
-                    <img src="IMG/lifestyle_banner.png" alt="Urban Lifestyle" class="w-full h-full object-cover grayscale opacity-70 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-1000">
+                    <img src="assets/images/lifestyle_banner.png" alt="Urban Lifestyle" class="w-full h-full object-cover grayscale opacity-70 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-1000">
                     <div class="absolute inset-0 bg-gradient-to-r from-black/60 via-transparent to-black/60"></div>
                     <div class="absolute inset-0 flex items-center justify-center">
                         <div class="text-center space-y-2 translate-y-4 group-hover:translate-y-0 transition-transform duration-700">
@@ -150,7 +150,7 @@ export const UI = {
                 <div id="menu-content" class="absolute top-0 left-0 bottom-0 w-[80%] max-w-sm bg-alta-black border-r border-white/10 -translate-x-full transition-transform duration-300 pointer-events-auto flex flex-col p-8 space-y-8">
                     <div class="flex justify-between items-center">
                         <div class="h-20">
-                            <img src="IMG/logo.png" alt="Alta Pinta Logo" class="h-full w-auto object-contain">
+                            <img src="assets/images/logo.png" alt="Alta Pinta Logo" class="h-full w-auto object-contain">
                         </div>
                         <button onclick="App.toggleMenu()" class="text-white hover:text-alta-neon">
                             <svg class="w-8 h-8" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 18L18 6M6 6l12 12" stroke-linecap="round" stroke-linejoin="round"></path></svg>
@@ -222,7 +222,7 @@ export const UI = {
 
     renderProductDetail: (p, selectedSize = 'M') => {
         const availableSizes = p.sizes && p.sizes.length > 0 ? p.sizes : ['S', 'M', 'L', 'XL'];
-        
+
         return `
             <div class="animate-fade-in bg-alta-black min-h-screen pb-20">
                 <!-- Product Header -->
@@ -272,24 +272,23 @@ export const UI = {
                             </div>
                             <div class="grid grid-cols-4 gap-3">
                                 ${availableSizes.map(size => {
-                                    const isSelected = size === selectedSize;
-                                    const isOutOfStock = size === 'XL'; // Ejemplo: XL sin stock
-                                    
-                                    return `
+            const isSelected = size === selectedSize;
+            const isOutOfStock = size === 'XL'; // Ejemplo: XL sin stock
+
+            return `
                                         <button 
                                             onclick="${!isOutOfStock ? `App.selectSize('${size}', '${p.id}')` : ''}"
-                                            class="h-12 border flex items-center justify-center font-black transition-all relative ${
-                                                isSelected 
-                                                ? 'border-alta-neon text-alta-neon' 
-                                                : isOutOfStock 
-                                                    ? 'border-white/10 text-white/20 cursor-not-allowed opacity-50' 
-                                                    : 'border-white/20 text-white hover:border-white'
-                                            }">
+                                            class="h-12 border flex items-center justify-center font-black transition-all relative ${isSelected
+                    ? 'border-alta-neon text-alta-neon'
+                    : isOutOfStock
+                        ? 'border-white/10 text-white/20 cursor-not-allowed opacity-50'
+                        : 'border-white/20 text-white hover:border-white'
+                }">
                                             ${size}
                                             ${isSelected ? '<div class="absolute -top-1 -right-1 w-2 h-2 bg-alta-neon rounded-full shadow-[0_0_10px_#A6FF00]"></div>' : ''}
                                         </button>
                                     `;
-                                }).join('')}
+        }).join('')}
                             </div>
                         </div>
 
@@ -482,7 +481,7 @@ export const UI = {
                     <section class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
                         <div class="relative group">
                             <div class="absolute -inset-4 border border-alta-neon/20 group-hover:border-alta-neon/50 transition-colors duration-700"></div>
-                            <img src="IMG/about_brand.png" alt="Alta Pinta Life" class="w-full grayscale-[0.3] brightness-75 contrast-110">
+                            <img src="assets/images/about_brand.png" alt="Alta Pinta Life" class="w-full grayscale-[0.3] brightness-75 contrast-110">
                             <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent"></div>
                             <div class="absolute bottom-4 left-4">
                                 <span class="bg-alta-neon text-black text-[10px] font-black px-2 py-1 uppercase italic">ORGULLO NACIONAL</span>
@@ -537,10 +536,10 @@ export const UI = {
     renderGallery: (products, activeTag = 'TODOS') => {
         // Usar las categorías configuradas por el admin
         const tags = ['TODOS', ...(window.App && window.App.categories ? window.App.categories : [])];
-        
+
         // Filtrar productos por tag
-        const filteredProducts = activeTag === 'TODOS' 
-            ? products 
+        const filteredProducts = activeTag === 'TODOS'
+            ? products
             : products.filter(p => (p.tag || p.category || 'SIN CATEGORÍA') === activeTag);
 
         return `
@@ -564,11 +563,10 @@ export const UI = {
                         ${tags.map(tag => `
                             <button 
                                 onclick="App.showGallery('${tag}')"
-                                class="px-6 py-2 rounded-full font-black uppercase text-[10px] tracking-widest transition-all ${
-                                    activeTag === tag 
-                                    ? 'bg-alta-neon text-black shadow-[0_0_20px_rgba(166,255,0,0.3)]' 
-                                    : 'bg-white/5 text-white/40 hover:bg-white/10 hover:text-white'
-                                }">
+                                class="px-6 py-2 rounded-full font-black uppercase text-[10px] tracking-widest transition-all ${activeTag === tag
+                ? 'bg-alta-neon text-black shadow-[0_0_20px_rgba(166,255,0,0.3)]'
+                : 'bg-white/5 text-white/40 hover:bg-white/10 hover:text-white'
+            }">
                                 ${tag}
                             </button>
                         `).join('')}

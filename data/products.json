@@ -4,7 +4,7 @@
         "name": "Remera Estatua Negra", 
         "price": 25000, 
         "tag": "PREMIUM", 
-        "img": "IMG/p1.jpeg",
+        "img": "assets/images/p1.jpeg",
         "description": "Diseño exclusivo de Alta Pinta. Piezas limitadas diseñadas para el street culture. Calidad superior en cada costura."
     },
     { 
@@ -12,7 +12,7 @@
         "name": "Remera Alien Blanca", 
         "price": 25000, 
         "tag": "TOP", 
-        "img": "IMG/p2.jpeg",
+        "img": "assets/images/p2.jpeg",
         "description": "Diseño exclusivo de Alta Pinta. Piezas limitadas diseñadas para el street culture. Calidad superior en cada costura."
     },
     { 
@@ -20,7 +20,7 @@
         "name": "Remera Valknut Gris", 
         "price": 25000, 
         "tag": "NUEVO", 
-        "img": "IMG/p3.jpeg",
+        "img": "assets/images/p3.jpeg",
         "description": "Diseño exclusivo de Alta Pinta. Piezas limitadas diseñadas para el street culture. Calidad superior en cada costura."
     },
     { 
@@ -28,7 +28,7 @@
         "name": "Remera Brújula Blanca", 
         "price": 25000, 
         "tag": "NUEVO", 
-        "img": "IMG/p4.jpeg",
+        "img": "assets/images/p4.jpeg",
         "description": "Diseño exclusivo de Alta Pinta. Piezas limitadas diseñadas para el street culture. Calidad superior en cada costura."
     }
 ]

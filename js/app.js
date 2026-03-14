@@ -481,7 +481,13 @@ const App = {
             if (dataDoc.exists()) {
                 const data = dataDoc.data();
                 App.categories = data.categories && data.categories.length > 0 ? data.categories : ['REMERAS', 'PANTALONES', 'BUZOS', 'ACCESORIOS'];
-                App.products = data.products || [];
+                // Adapta rutas viejas de base de datos a la nueva arquitectura
+                App.products = (data.products || []).map(p => {
+                    if (p.img && typeof p.img === 'string' && p.img.startsWith('IMG/')) {
+                        p.img = p.img.replace('IMG/', 'assets/images/');
+                    }
+                    return p;
+                });
             } else {
                 // Fallback a nuestro JSON si la BD es nueva y está vacía
                 const fallbackFetch = await fetch('data/products.json');
