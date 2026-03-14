@@ -24,26 +24,27 @@ export const renderSplashScreen = () => {
 export const renderHeader = () => {
     return `
             <header class="fixed top-0 left-0 right-0 z-50 transition-all duration-300 h-24 flex items-center justify-between px-6 lg:px-12 desktop-header">
-                <div class="flex items-center space-x-8">
-                    <div class="flex items-center select-none cursor-pointer" onclick="location.reload()">
-                        <span class="text-3xl font-black italic tracking-tighter text-white">ALTA</span>
-                        <span class="text-3xl font-black italic tracking-tighter text-alta-neon">PINTA</span>
-                    </div>
-                    
-                    <!-- Desktop Nav Links (Hidden on mobile) -->
-                    <nav class="hidden lg:flex items-center space-x-8 pt-1">
-                        <a href="javascript:void(0)" class="nav-link text-alta-neon font-black uppercase text-xs tracking-widest hover:text-white transition-colors" onclick="App.showHome()">Inicio</a>
-                        <a href="javascript:void(0)" class="nav-link text-white/70 font-black uppercase text-xs tracking-widest hover:text-alta-neon transition-colors" onclick="App.scrollToProductsFromMenu()">Destacados</a>
-                        <a href="javascript:void(0)" class="nav-link text-white/70 font-black uppercase text-xs tracking-widest hover:text-alta-neon transition-colors" onclick="App.showGallery()">Galería</a>
-                        <a href="javascript:void(0)" class="nav-link text-white/70 font-black uppercase text-xs tracking-widest hover:text-alta-neon transition-colors" onclick="App.showAbout()">Nosotros</a>
-                    </nav>
+                <div class="flex items-center select-none cursor-pointer" onclick="location.reload()">
+                    <span class="text-3xl font-black italic tracking-tighter text-white">ALTA</span>
+                    <span class="text-3xl font-black italic tracking-tighter text-alta-neon">PINTA</span>
                 </div>
+                
+                <!-- Desktop Nav Links (Centered absolute) -->
+                <nav class="hidden lg:flex items-center space-x-10 absolute left-1/2 -translate-x-1/2 pt-1">
+                    <a href="javascript:void(0)" class="nav-link text-alta-neon font-black uppercase text-[13px] tracking-[0.2em] hover:text-white transition-colors" onclick="App.showHome()">Inicio</a>
+                    <a href="javascript:void(0)" class="nav-link text-white/70 font-black uppercase text-[13px] tracking-[0.2em] hover:text-alta-neon transition-colors" onclick="App.scrollToProductsFromMenu()">Destacados</a>
+                    <a href="javascript:void(0)" class="nav-link text-white/70 font-black uppercase text-[13px] tracking-[0.2em] hover:text-alta-neon transition-colors" onclick="App.showGallery()">Galería</a>
+                    <a href="javascript:void(0)" class="nav-link text-white/70 font-black uppercase text-[13px] tracking-[0.2em] hover:text-alta-neon transition-colors" onclick="App.showAbout()">Nosotros</a>
+                </nav>
 
                 <div class="lg:hidden w-10 h-10 flex items-center justify-center cursor-pointer" onclick="App.toggleMenu()">
                     <svg class="w-8 h-8" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                         <path d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" stroke-linecap="round" stroke-linejoin="round"></path>
                     </svg>
                 </div>
+
+                <!-- Spacer for balance in flex context on Large screens -->
+                <div class="hidden lg:block w-32"></div>
             </header>
         `;
 }
