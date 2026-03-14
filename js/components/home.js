@@ -3,7 +3,7 @@ export const renderHome = () => {
             <!-- Hero Section -->
             <section class="relative h-screen lg:h-screen flex flex-col justify-end lg:justify-center pb-12 lg:pb-0 px-6 lg:px-24 overflow-hidden">
                 <div class="absolute inset-0 z-0">
-                    <img alt="Main Fashion Model" class="w-full h-full object-cover grayscale brightness-[0.4] animate-fade-in scale-105"
+                    <img alt="Main Fashion Model" class="w-full h-full object-cover object-top grayscale brightness-[0.4] animate-fade-in scale-105"
                         src="https://images.unsplash.com/photo-1552374196-1ab2a1c593e8?auto=format&fit=crop&q=80&w=2000" />
                     <div class="absolute inset-0 bg-gradient-to-t from-alta-black via-black/20 to-transparent"></div>
                 </div>
