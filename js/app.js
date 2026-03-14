@@ -1,6 +1,6 @@
 import { UI } from './ui.js';
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+import { getFirestore, doc, setDoc, getDoc, collection, getDocs, addDoc, deleteDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 
 const firebaseConfig = {
     apiKey: "AIzaSyDJ6MDs2F-0sB2F_4zsLpYXpx9LRE1z0Sg",
@@ -199,13 +199,13 @@ const App = {
         App.saveDataToCloud();
     },
 
-    addCategory: () => {
+    addCategory: async () => {
         const input = document.getElementById('new-cat-name');
         if (!input) return;
         const name = input.value.trim().toUpperCase();
         if (name && !App.categories.includes(name)) {
             App.categories.push(name);
-            App.saveCategories();
+            await App.saveCategories();
             App.showAdminDashboard();
         }
         input.value = "";
@@ -216,10 +216,10 @@ const App = {
         document.body.insertAdjacentHTML('beforeend', UI.renderCategoryDeleteConfirmation(cat));
     },
 
-    confirmCategoryDelete: () => {
+    confirmCategoryDelete: async () => {
         if (App.pendingCategoryDelete) {
             App.categories = App.categories.filter(c => c !== App.pendingCategoryDelete);
-            App.saveCategories();
+            await App.saveCategories();
             App.pendingCategoryDelete = null;
             App.closeCategoryModal();
             App.showAdminDashboard();
@@ -296,7 +296,7 @@ const App = {
         document.getElementById('btn-cancel-edit').classList.add('hidden');
     },
 
-    adminAddProduct: () => {
+    adminAddProduct: async () => {
         const nameInput = document.getElementById('new-p-name');
         const priceInput = document.getElementById('new-p-price');
         const tagInput = document.getElementById('new-p-tag');
@@ -309,7 +309,7 @@ const App = {
         const name = nameInput.value.trim();
         const price = parseInt(priceInput.value);
         const tag = tagInput.value;
-        const img = App.tempImageData || "https://images.unsplash.com/photo-1552374196-1ab2a1c593e8?auto=format&fit=crop&q=80&w=1000";
+        const img = App.tempImageData || "assets/images/logo.png";
 
         // Obtener talles seleccionados
         const sizes = Array.from(document.querySelectorAll('.admin-size-check:checked')).map(cb => cb.value);
@@ -319,37 +319,43 @@ const App = {
             return;
         }
 
-        if (App.editingProductId) {
-            // MODO EDICIÓN: Actualizar producto existente
-            const index = App.products.findIndex(p => p.id === App.editingProductId);
-            if (index !== -1) {
-                App.products[index] = {
-                    ...App.products[index],
+        const btnSave = document.getElementById('btn-save-product');
+        btnSave.innerText = "Guardando...";
+        btnSave.disabled = true;
+
+        try {
+            if (App.editingProductId) {
+                // MODO EDICIÓN: Actualizar en Firebase
+                // Buscamos el ID de Firebase del producto (que guardamos en App.products)
+                const product = App.products.find(p => p.id === App.editingProductId);
+                if (product && product.fbId) {
+                    await updateDoc(doc(db, "products", product.fbId), {
+                        name, price, tag, img, sizes
+                    });
+                }
+            } else {
+                // MODO CREACIÓN: Agregar a colección en Firebase
+                await addDoc(collection(db, "products"), {
+                    id: Date.now(),
                     name,
                     price,
                     tag,
                     img,
-                    sizes
-                };
+                    sizes,
+                    description: "Producto gestionado desde el panel de administración."
+                });
             }
-            App.editingProductId = null;
-        } else {
-            // MODO CREACIÓN: Agregar nuevo
-            const newProduct = {
-                id: Date.now(),
-                name,
-                price,
-                tag,
-                img,
-                sizes,
-                description: "Producto gestionado desde el panel de administración."
-            };
-            App.products.unshift(newProduct);
-        }
 
-        App.saveProducts();
-        App.tempImageData = null;
-        App.showAdminDashboard();
+            App.editingProductId = null;
+            App.tempImageData = null;
+            await App.loadProducts(); // Recargar todo
+            App.showAdminDashboard();
+        } catch (e) {
+            console.error("Error al guardar producto:", e);
+            alert("Error al guardar. Revisa la consola.");
+        } finally {
+            btnSave.disabled = false;
+        }
     },
 
     handleImageUpload: (event) => {
@@ -435,15 +441,20 @@ const App = {
         document.body.insertAdjacentHTML('beforeend', UI.renderDeleteConfirmation(p));
     },
 
-    confirmDelete: () => {
+    confirmDelete: async () => {
         if (App.pendingDeleteId) {
-            App.products = App.products.filter(p => p.id !== App.pendingDeleteId);
-            App.saveProducts();
-            App.pendingDeleteId = null;
-
-            // Cerrar modal y refrescar dashboard
-            App.closeAdminModal();
-            App.showAdminDashboard();
+            const product = App.products.find(p => p.id === App.pendingDeleteId);
+            if (product && product.fbId) {
+                try {
+                    await deleteDoc(doc(db, "products", product.fbId));
+                    await App.loadProducts();
+                    App.pendingDeleteId = null;
+                    App.closeAdminModal();
+                    App.showAdminDashboard();
+                } catch (e) {
+                    console.error("Error eliminando:", e);
+                }
+            }
         }
     },
 
@@ -456,20 +467,23 @@ const App = {
         App.pendingDeleteId = null;
     },
 
+    saveCategories: async () => {
+        try {
+            await setDoc(doc(db, "store", "config"), {
+                categories: App.categories
+            }, { merge: true });
+            console.log("Categorías guardadas.");
+        } catch (e) {
+            console.error("Error guardando categorías:", e);
+        }
+    },
+
     saveProducts: () => {
-        App.saveDataToCloud();
+        // Obsoleto, ya guardamos individualmente
     },
 
     saveDataToCloud: async () => {
-        try {
-            await setDoc(doc(db, "store", "data"), {
-                categories: App.categories,
-                products: App.products
-            });
-            console.log("Datos respaldados en Firebase correctamente!");
-        } catch (e) {
-            console.error("Error guardando en la nube de Firebase", e);
-        }
+        // Obsoleto, ya guardamos individualmente
     },
 
     loadProducts: async () => {
@@ -477,22 +491,34 @@ const App = {
         if (!grid) return;
 
         try {
-            const dataDoc = await getDoc(doc(db, "store", "data"));
-            if (dataDoc.exists()) {
-                const data = dataDoc.data();
-                App.categories = data.categories && data.categories.length > 0 ? data.categories : ['REMERAS', 'PANTALONES', 'BUZOS', 'ACCESORIOS'];
-                // Adapta rutas viejas de base de datos a la nueva arquitectura
-                App.products = (data.products || []).map(p => {
-                    if (p.img && typeof p.img === 'string' && p.img.startsWith('IMG/')) {
-                        p.img = p.img.replace('IMG/', 'assets/images/');
-                    }
-                    return p;
-                });
-            } else {
-                console.log("Base de datos vacía. Iniciando configuración por defecto.");
-                App.products = [];
-                App.categories = ['REMERAS', 'PANTALONES', 'BUZOS', 'ACCESORIOS'];
-                await App.saveDataToCloud();
+            // 1. Cargar configuración (Categorías)
+            const configDoc = await getDoc(doc(db, "store", "config"));
+            if (configDoc.exists()) {
+                App.categories = configDoc.data().categories || App.categories;
+            }
+
+            // 2. Cargar Productos de la colección individual
+            const querySnapshot = await getDocs(collection(db, "products"));
+            App.products = [];
+            querySnapshot.forEach((docSnap) => {
+                const data = docSnap.data();
+                // Inyectamos el ID real de Firebase para poder borrar/editar luego
+                App.products.push({ ...data, fbId: docSnap.id });
+            });
+
+            // Ordenar por ID (más nuevos primero)
+            App.products.sort((a, b) => b.id - a.id);
+
+            // Adaptar rutas viejas si quedaran
+            App.products.forEach(p => {
+                if (p.img && typeof p.img === 'string' && p.img.startsWith('IMG/')) {
+                    p.img = p.img.replace('IMG/', 'assets/images/');
+                }
+            });
+
+            // Si llegara a estar vacío (base de datos nueva)
+            if (App.products.length === 0 && App.categories.length === 4) {
+                console.log("Sistema libre de deudas, cargando vacío.");
             }
 
             // Añadimos clases de scroll horizontal al contenedor para móvil

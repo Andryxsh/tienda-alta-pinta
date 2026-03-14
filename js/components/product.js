@@ -1,7 +1,7 @@
 export const renderProductDetail = (p, selectedSize = 'M') => {
-        const availableSizes = p.sizes && p.sizes.length > 0 ? p.sizes : ['S', 'M', 'L', 'XL'];
+    const availableSizes = p.sizes && p.sizes.length > 0 ? p.sizes : ['S', 'M', 'L', 'XL'];
 
-        return `
+    return `
             <div class="animate-fade-in bg-alta-black min-h-screen pb-20">
                 <!-- Product Header -->
                 <div class="fixed top-0 left-0 right-0 z-50 glass-header h-20 flex items-center justify-between px-6">
@@ -50,23 +50,23 @@ export const renderProductDetail = (p, selectedSize = 'M') => {
                             </div>
                             <div class="grid grid-cols-4 gap-3">
                                 ${availableSizes.map(size => {
-            const isSelected = size === selectedSize;
-            const isOutOfStock = size === 'XL'; // Ejemplo: XL sin stock
+        const isSelected = size === selectedSize;
+        const isOutOfStock = size === 'XL'; // Ejemplo: XL sin stock
 
-            return `
+        return `
                                         <button 
                                             onclick="${!isOutOfStock ? `App.selectSize('${size}', '${p.id}')` : ''}"
                                             class="h-12 border flex items-center justify-center font-black transition-all relative ${isSelected
-                    ? 'border-alta-neon text-alta-neon'
-                    : isOutOfStock
-                        ? 'border-white/10 text-white/20 cursor-not-allowed opacity-50'
-                        : 'border-white/20 text-white hover:border-white'
-                }">
+                ? 'border-alta-neon text-alta-neon'
+                : isOutOfStock
+                    ? 'border-white/10 text-white/20 cursor-not-allowed opacity-50'
+                    : 'border-white/20 text-white hover:border-white'
+            }">
                                             ${size}
                                             ${isSelected ? '<div class="absolute -top-1 -right-1 w-2 h-2 bg-alta-neon rounded-full shadow-[0_0_10px_#A6FF00]"></div>' : ''}
                                         </button>
                                     `;
-        }).join('')}
+    }).join('')}
                             </div>
                         </div>
 
@@ -94,4 +94,4 @@ export const renderProductDetail = (p, selectedSize = 'M') => {
                 </div>
             </div>
         `;
-    }
+}
