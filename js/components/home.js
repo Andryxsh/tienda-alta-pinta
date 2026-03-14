@@ -1,21 +1,23 @@
 export const renderHome = () => {
-        return `
+    return `
             <!-- Hero Section -->
-            <section class="relative min-h-[80vh] flex flex-col justify-end pb-12 px-6 overflow-hidden">
+            <section class="relative h-screen lg:h-screen flex flex-col justify-end lg:justify-center pb-12 lg:pb-0 px-6 lg:px-24 overflow-hidden">
                 <div class="absolute inset-0 z-0">
-                    <img alt="Main Fashion Model" class="w-full h-full object-cover grayscale brightness-75 animate-fade-in"
-                        src="https://images.unsplash.com/photo-1552374196-1ab2a1c593e8?auto=format&fit=crop&q=80&w=1000" />
-                    <div class="absolute inset-0 bg-gradient-to-t from-alta-black via-transparent to-transparent"></div>
+                    <img alt="Main Fashion Model" class="w-full h-full object-cover grayscale brightness-[0.4] animate-fade-in scale-105"
+                        src="https://images.unsplash.com/photo-1552374196-1ab2a1c593e8?auto=format&fit=crop&q=80&w=2000" />
+                    <div class="absolute inset-0 bg-gradient-to-t from-alta-black via-black/20 to-transparent"></div>
                 </div>
-                <div class="relative z-10 space-y-4">
-                    <h2 class="text-alta-neon font-bold tracking-[0.2em] uppercase text-xs neon-glow">EDICIONES LIMITADAS</h2>
-                    <h1 class="text-6xl font-black uppercase leading-[0.9] tracking-tighter">
+                <div class="relative z-10 space-y-6 max-w-4xl">
+                    <h2 class="text-alta-neon font-bold tracking-[0.3em] uppercase text-xs lg:text-sm neon-glow">EDICIONES LIMITADAS 2026</h2>
+                    <h1 class="text-6xl md:text-8xl lg:text-[10rem] font-black uppercase leading-[0.85] tracking-tighter">
                         URBAN<br />
                         PREMIUM <span class="text-alta-neon">STYLE</span>
                     </h1>
-                    <p class="text-gray-400 text-sm max-w-[280px]">Diseño exclusivo y calidad premium. Alta Pinta: Definimos la cultura de las calles.</p>
-                    <div class="pt-6">
-                        <button onclick="App.scrollToProducts()" class="bg-alta-neon text-black font-black uppercase py-4 px-10 rounded-full text-lg hover:scale-105 transition-transform duration-300 shadow-[0_0_20px_rgba(166,255,0,0.4)]">COMPRAR AHORA</button>
+                    <p class="text-gray-300 text-sm md:text-lg max-w-[320px] md:max-w-md lg:max-w-xl border-l-2 border-alta-neon pl-4">
+                        Diseño exclusivo y calidad premium. Alta Pinta: Definimos la cultura de las calles con ADN boliviano e ingeniería textil superior.
+                    </p>
+                    <div class="pt-8 flex flex-wrap gap-4">
+                        <button onclick="App.scrollToProducts()" class="bg-alta-neon text-black font-black uppercase py-5 px-12 rounded-full text-lg hover:bg-white hover:scale-110 transition-all duration-300 shadow-[0_0_40px_rgba(166,255,0,0.3)]">Explorar Colección</button>
                     </div>
                 </div>
             </section>
@@ -97,4 +99,4 @@ export const renderHome = () => {
                 </div>
             </section>
         `;
-    }
+}

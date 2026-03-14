@@ -29,6 +29,18 @@ const App = {
         App.loadCategories();
         console.log("Tienda Alta Pinta Inicializada");
 
+        // Listener para el scroll del header (Efecto transparencia)
+        window.addEventListener('scroll', () => {
+            const header = document.querySelector('.desktop-header');
+            if (header) {
+                if (window.scrollY > 50) {
+                    header.classList.add('scrolled');
+                } else {
+                    header.classList.remove('scrolled');
+                }
+            }
+        });
+
         // 1. Mostrar Splash Screen Inmediatamente
         document.body.insertAdjacentHTML('afterbegin', UI.renderSplashScreen());
         document.body.style.overflow = 'hidden';

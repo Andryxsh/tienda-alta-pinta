@@ -1,47 +1,58 @@
-/* 
-   Alta Pinta - Responsive Enhancements 
-   Targeting Tablet, PC and Wide Screens
-*/
-
-/* Container & Layout */
 @media (min-width: 1024px) {
 
-    /* Main container max-width to prevent content from stretching too much on PC */
+    /* Full Screen Main */
     main {
-        max-width: 1600px;
-        margin: 0 auto;
+        max-width: 100%;
+        margin: 0;
         position: relative;
+        padding-top: 0 !important;
+        /* Allow header to overlap hero */
     }
 
-    /* Standard section horizontal padding improvement */
-    section {
-        padding-left: 5% !important;
-        padding-right: 5% !important;
+    /* Invisible/Transparent Header that blends with background */
+    header.desktop-header {
+        background: transparent !important;
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+        border-bottom: none !important;
+        padding-top: 2rem !important;
+        transition: all 0.5s ease;
     }
 
-    /* Fixed Headers adjustment for centered main */
-    header.fixed {
-        max-width: 1600px;
-        left: 50% !important;
-        transform: translateX(-50%);
-        padding-left: 5% !important;
-        padding-right: 5% !important;
+    /* Header scroll effect (optional but recommended for readability) */
+    header.desktop-header.scrolled {
+        background: rgba(0, 0, 0, 0.8) !important;
+        backdrop-filter: blur(10px) !important;
+        padding-top: 0 !important;
+        height: 80px !important;
     }
 
-    /* Side menu drawer refinement for desktop */
-    #menu-content {
-        max-width: 450px !important;
+    /* Navigation Link Styles */
+    .nav-link {
+        position: relative;
+        padding: 0.5rem 0;
     }
 
-    /* Product Grid Adjustments */
+    .nav-link::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 0;
+        height: 2px;
+        background: #A6FF00;
+        transition: width 0.3s ease;
+    }
+
+    .nav-link:hover::after {
+        width: 100%;
+    }
+
+    /* Product Grid for Large Screens */
     #product-grid {
         grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
-        gap: 3rem !important;
-    }
-
-    /* Marquee font size bump for PC */
-    .marquee-strip span {
-        font-size: 5rem !important;
+        gap: 2rem !important;
+        padding: 0 5% !important;
     }
 }
 
@@ -60,20 +71,22 @@
 
 /* Hero Section PC refinement */
 @media (min-width: 1024px) {
-    section.relative.min-h-\[80vh\] {
-        min-height: 90vh !important;
+    section.h-screen {
+        height: 100vh !important;
+        display: flex !important;
+        flex-direction: column !important;
         justify-content: center !important;
-        align-items: flex-start !important;
         padding-left: 10% !important;
     }
 
-    section.relative.min-h-\[80vh\] h1 {
-        font-size: 8rem !important;
+    section.h-screen h1 {
+        font-size: 10rem !important;
+        margin-left: -5px;
     }
 
-    section.relative.min-h-\[80vh\] p {
-        max-width: 450px !important;
-        font-size: 1.1rem !important;
+    section.h-screen p {
+        max-width: 600px !important;
+        font-size: 1.25rem !important;
     }
 }
 

@@ -1,5 +1,5 @@
 export const renderSplashScreen = () => {
-        return `
+    return `
             <div id="splash-screen" class="fixed inset-0 z-[100] bg-black flex flex-col items-center justify-center transition-all duration-1000">
                 <div class="relative flex flex-col items-center">
                     <!-- PNG Logo Animation (CINEMATIC) -->
@@ -18,29 +18,39 @@ export const renderSplashScreen = () => {
                 </div>
             </div>
         `;
-    }
+}
 
 
 export const renderHeader = () => {
-        return `
-            <header class="fixed top-0 left-0 right-0 z-50 glass-header h-24 flex items-center justify-between px-6">
-                <div class="w-10 h-10 flex items-center justify-center cursor-pointer" onclick="App.toggleMenu()">
+    return `
+            <header class="fixed top-0 left-0 right-0 z-50 transition-all duration-300 h-24 flex items-center justify-between px-6 lg:px-12 desktop-header">
+                <div class="flex items-center space-x-8">
+                    <div class="flex items-center select-none cursor-pointer" onclick="location.reload()">
+                        <span class="text-3xl font-black italic tracking-tighter text-white">ALTA</span>
+                        <span class="text-3xl font-black italic tracking-tighter text-alta-neon">PINTA</span>
+                    </div>
+                    
+                    <!-- Desktop Nav Links (Hidden on mobile) -->
+                    <nav class="hidden lg:flex items-center space-x-8 pt-1">
+                        <a href="javascript:void(0)" class="nav-link text-alta-neon font-black uppercase text-xs tracking-widest hover:text-white transition-colors" onclick="App.showHome()">Inicio</a>
+                        <a href="javascript:void(0)" class="nav-link text-white/70 font-black uppercase text-xs tracking-widest hover:text-alta-neon transition-colors" onclick="App.scrollToProductsFromMenu()">Destacados</a>
+                        <a href="javascript:void(0)" class="nav-link text-white/70 font-black uppercase text-xs tracking-widest hover:text-alta-neon transition-colors" onclick="App.showGallery()">Galería</a>
+                        <a href="javascript:void(0)" class="nav-link text-white/70 font-black uppercase text-xs tracking-widest hover:text-alta-neon transition-colors" onclick="App.showAbout()">Nosotros</a>
+                    </nav>
+                </div>
+
+                <div class="lg:hidden w-10 h-10 flex items-center justify-center cursor-pointer" onclick="App.toggleMenu()">
                     <svg class="w-8 h-8" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                         <path d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" stroke-linecap="round" stroke-linejoin="round"></path>
                     </svg>
                 </div>
-                <div class="flex items-center select-none" onclick="location.reload()" style="cursor: pointer;">
-                    <span class="text-3xl font-black italic tracking-tighter text-white">ALTA</span>
-                    <span class="text-3xl font-black italic tracking-tighter text-alta-neon">PINTA</span>
-                </div>
-                <div class="w-10"></div> <!-- Spacer for balance -->
             </header>
         `;
-    }
+}
 
 
 export const renderMenu = () => {
-        return `
+    return `
             <div id="side-menu" class="fixed inset-0 z-[60] pointer-events-none">
                 <div id="menu-backdrop" class="absolute inset-0 bg-black/60 opacity-0 transition-opacity duration-300" onclick="App.toggleMenu()"></div>
                 <div id="menu-content" class="absolute top-0 left-0 bottom-0 w-[80%] max-w-sm bg-alta-black border-r border-white/10 -translate-x-full transition-transform duration-300 pointer-events-auto flex flex-col p-8 space-y-8">
@@ -73,11 +83,11 @@ export const renderMenu = () => {
                 </div>
             </div>
         `;
-    }
+}
 
 
 export const renderFooter = () => {
-        return `
+    return `
             <footer class="bg-black py-16 px-6 border-t border-white/5 relative overflow-hidden">
                 <div class="max-w-6xl mx-auto">
                     <div class="flex flex-col md:flex-row justify-between items-center gap-12">
@@ -115,4 +125,4 @@ export const renderFooter = () => {
                 </div>
             </footer>
         `;
-    }
+}
