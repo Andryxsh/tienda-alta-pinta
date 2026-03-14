@@ -1,3 +1,22 @@
+/* Global Header Setup (Mobile First) */
+header.desktop-header {
+    background: transparent !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    border-bottom: none !important;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Scroll Effect for ALL screens */
+header.desktop-header.scrolled {
+    background: rgba(0, 0, 0, 0.85) !important;
+    backdrop-filter: blur(15px) !important;
+    -webkit-backdrop-filter: blur(15px) !important;
+    height: 70px !important;
+    border-bottom: 1px solid rgba(166, 255, 0, 0.1) !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
 @media (min-width: 1024px) {
 
     /* Full Screen Main */
@@ -9,20 +28,12 @@
         /* Allow header to overlap hero */
     }
 
-    /* Invisible/Transparent Header that blends with background */
+    /* PC Header specific padding */
     header.desktop-header {
-        background: transparent !important;
-        backdrop-filter: none !important;
-        -webkit-backdrop-filter: none !important;
-        border-bottom: none !important;
-        padding-top: 2rem !important;
-        transition: all 0.5s ease;
+        padding-top: 1.5rem !important;
     }
 
-    /* Header scroll effect (optional but recommended for readability) */
     header.desktop-header.scrolled {
-        background: rgba(0, 0, 0, 0.8) !important;
-        backdrop-filter: blur(10px) !important;
         padding-top: 0 !important;
         height: 80px !important;
     }
